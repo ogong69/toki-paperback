@@ -1,12 +1,4 @@
-import {
-  Source,
-  Manga,
-  Chapter,
-  ChapterDetails,
-  HomeSection,
-  SearchRequest,
-  SearchResults
-} from "@paperback/types"
+import { Source } from "@paperback/types"
 
 const BASE_URLS = [
   "https://manatoki469.net",
@@ -15,8 +7,6 @@ const BASE_URLS = [
 
 export class Toki extends Source {
 
-  base: string = BASE_URLS[0]
-
   constructor() {
     super({
       id: "toki",
@@ -24,10 +14,10 @@ export class Toki extends Source {
       baseUrl: BASE_URLS[0],
       language: "ko"
     })
+    this.base = BASE_URLS[0]
   }
 
-  // 🔥 살아있는 도메인 찾기
-  async getBaseUrl(): Promise<string> {
+  async getBaseUrl() {
     for (const url of BASE_URLS) {
       try {
         const request = createRequestObject({
@@ -42,8 +32,7 @@ export class Toki extends Source {
     return this.base
   }
 
-  // 🔹 홈
-  async getHomePageSections(): Promise<HomeSection[]> {
+  async getHomePageSections() {
     const base = await this.getBaseUrl()
 
     const request = createRequestObject({
@@ -54,7 +43,7 @@ export class Toki extends Source {
     const response = await this.requestManager.schedule(request, 1)
     const html = response.data
 
-    const regex = /href="\/comic\/(\d+)".*?src="([^"]+)".*?title="([^"]+)"/g
+    const regex = /href="\/comic\/(\d+)".*?title="([^"]+)"/g
 
     let match
     const items = []
@@ -62,8 +51,7 @@ export class Toki extends Source {
     while ((match = regex.exec(html)) !== null) {
       items.push({
         id: match[1],
-        image: match[2],
-        title: match[3]
+        title: match[2]
       })
     }
 
@@ -74,19 +62,18 @@ export class Toki extends Source {
     }]
   }
 
-  // 🔹 검색
-  async getSearchResults(query: SearchRequest): Promise<SearchResults> {
+  async getSearchResults(query) {
     const base = await this.getBaseUrl()
 
     const request = createRequestObject({
-      url: `${base}/search?keyword=${encodeURIComponent(query.title!)}`,
+      url: `${base}/search?keyword=${encodeURIComponent(query.title || "")}`,
       method: "GET"
     })
 
     const response = await this.requestManager.schedule(request, 1)
     const html = response.data
 
-    const regex = /href="\/comic\/(\d+)".*?src="([^"]+)".*?title="([^"]+)"/g
+    const regex = /href="\/comic\/(\d+)".*?title="([^"]+)"/g
 
     let match
     const results = []
@@ -94,38 +81,25 @@ export class Toki extends Source {
     while ((match = regex.exec(html)) !== null) {
       results.push({
         id: match[1],
-        image: match[2],
-        title: match[3]
+        title: match[2]
       })
     }
 
     return { results }
   }
 
-  // 🔹 상세
-  async getMangaDetails(mangaId: string): Promise<Manga> {
+  async getMangaDetails(mangaId) {
     const base = await this.getBaseUrl()
-
-    const request = createRequestObject({
-      url: `${base}/comic/${mangaId}`,
-      method: "GET"
-    })
-
-    const response = await this.requestManager.schedule(request, 1)
-    const html = response.data
-
-    const title = html.match(/<title>(.*?)<\/title>/)?.[1] || ""
 
     return {
       id: mangaId,
-      titles: [title],
+      titles: [mangaId],
       image: "",
       status: 1
     }
   }
 
-  // 🔹 챕터
-  async getChapters(mangaId: string): Promise<Chapter[]> {
+  async getChapters(mangaId) {
     const base = await this.getBaseUrl()
 
     const request = createRequestObject({
@@ -136,7 +110,7 @@ export class Toki extends Source {
     const response = await this.requestManager.schedule(request, 1)
     const html = response.data
 
-    const regex = /href="\/comic\/(\d+)"/g
+    const regex = /comic\/(\d+)/g
 
     let match
     const chapters = []
@@ -152,12 +126,7 @@ export class Toki extends Source {
     return chapters.reverse()
   }
 
-  // 🔥 뷰어
-  async getChapterDetails(
-    mangaId: string,
-    chapterId: string
-  ): Promise<ChapterDetails> {
-
+  async getChapterDetails(mangaId, chapterId) {
     const base = await this.getBaseUrl()
 
     const request = createRequestObject({
