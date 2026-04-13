@@ -1,9 +1,9 @@
-import { Source } from "@paperback/types"
-
 const BASE_URLS = [
   "https://manatoki469.net",
   "https://newtoki469.com"
 ]
+
+class Toki extends Source {
 
 export class Toki extends Source {
 
@@ -147,3 +147,4 @@ export class Toki extends Source {
     }
   }
 }
+export default Toki
