@@ -5,8 +5,6 @@ const BASE_URLS = [
 
 class Toki extends Source {
 
-export class Toki extends Source {
-
   constructor() {
     super({
       id: "toki",
@@ -89,8 +87,6 @@ export class Toki extends Source {
   }
 
   async getMangaDetails(mangaId) {
-    const base = await this.getBaseUrl()
-
     return {
       id: mangaId,
       titles: [mangaId],
@@ -147,4 +143,3 @@ export class Toki extends Source {
     }
   }
 }
-export default Toki
