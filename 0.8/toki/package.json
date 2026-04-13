@@ -3,13 +3,5 @@
   "version": "1.0.0",
   "description": "Manatoki + Newtoki Extension",
   "author": "ogong69",
-  "contentRating": "MATURE",
-  "websiteBaseURL": "",
-  "main": "Toki.js",
-  "sourceTags": [
-    {
-      "text": "Korean",
-      "type": "language"
-    }
-  ]
+  "contentRating": "MATURE"
 }
