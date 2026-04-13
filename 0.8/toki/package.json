@@ -1,7 +1,6 @@
 {
-  "name": "Toki",
+  "name": "toki",
   "version": "1.0.0",
-  "description": "Manatoki + Newtoki Extension",
-  "author": "ogong69",
+  "description": "Manatoki + Newtoki extension",
   "contentRating": "MATURE"
 }
